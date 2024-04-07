@@ -1,0 +1,119 @@
+4_1
+SELECT COUNT(*)
+FROM order_details
+INNER JOIN orders ON order_details.order_id = orders.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id;
+
+4_2
+SELECT COUNT(*)
+FROM order_details
+LEFT JOIN orders ON order_details.order_id = orders.id
+RIGHT JOIN customers ON orders.customer_id = customers.id
+LEFT JOIN products ON order_details.product_id = products.id
+LEFT JOIN categories ON products.category_id = categories.id
+LEFT JOIN employees ON orders.employee_id = employees.employee_id
+LEFT JOIN shippers ON orders.shipper_id = shippers.id
+LEFT JOIN suppliers ON products.supplier_id = suppliers.id;
+
+Коли ми заміняємо оператори INNER JOIN на LEFT JOIN або RIGHT JOIN у SQL запиті, це впливає на кількість рядків, 
+що повертаються, оскільки змінюється логіка об'єднання таблиць.
+
+LEFT JOIN повертає всі рядки з лівої таблиці, а також відповідні рядки з правої таблиці. 
+Якщо відповідний рядок у правій таблиці не знайдено, у результаті все одно будуть рядки з лівої таблиці,
+а відповідні поля з правої таблиці будуть заповнені значенням NULL.
+
+RIGHT JOIN працює аналогічно до LEFT JOIN, але замість того, щоб повертати всі рядки з лівої таблиці, він повертає всі рядки з правої таблиці.
+
+У нашому випадку це збільшує кількість рядків у результаті, 
+оскільки до результату додаються рядки з однієї з таблиць, незалежно від того, чи є відповідність у іншій таблиці.
+
+
+4_3
+SELECT *
+FROM order_details
+INNER JOIN orders ON order_details.order_id = orders.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+WHERE employees.employee_id > 3 AND employees.employee_id <= 10;
+
+
+4_4
+SELECT 
+    categories.name AS category_name,
+    COUNT(*) AS total_rows,
+    AVG(order_details.quantity) AS average_quantity
+FROM order_details
+INNER JOIN orders ON order_details.order_id = orders.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+WHERE employees.employee_id > 3 AND employees.employee_id <= 10
+GROUP BY categories.name;
+
+
+4_5
+SELECT 
+    categories.name AS category_name,
+    COUNT(*) AS total_rows,
+    AVG(order_details.quantity) AS average_quantity
+FROM order_details
+INNER JOIN orders ON order_details.order_id = orders.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+GROUP BY categories.name
+HAVING AVG(order_details.quantity) > 21;
+
+
+4_6
+SELECT 
+    categories.name AS category_name,
+    COUNT(*) AS total_rows,
+    AVG(order_details.quantity) AS average_quantity
+FROM order_details
+INNER JOIN orders ON order_details.order_id = orders.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+WHERE employees.employee_id > 3 AND employees.employee_id <= 10
+GROUP BY categories.name
+HAVING AVG(order_details.quantity) > 21
+ORDER BY total_rows DESC;
+
+
+4_7
+SELECT 
+    categories.name AS category_name,
+    COUNT(*) AS total_rows,
+    AVG(order_details.quantity) AS average_quantity
+FROM order_details
+INNER JOIN orders ON order_details.order_id = orders.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+WHERE employees.employee_id > 3 AND employees.employee_id <= 10
+GROUP BY categories.name
+HAVING AVG(order_details.quantity) > 21
+ORDER BY total_rows DESC
+LIMIT 4 OFFSET 1;
